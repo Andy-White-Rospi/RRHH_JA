@@ -15,7 +15,7 @@ from .forms import TaskForm, CommissionForm,Register_assistenceForm, Vacation_re
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
 from django.db.models import Q
-import re
+
 User = get_user_model()
 
 
