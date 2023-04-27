@@ -1,0 +1,121 @@
+{% extends 'base.html' %} {% block content %}
+
+    <h1>Aprobación de solicitudes</h1>
+
+    <ul>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panel1">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                    REPROGRAMACIÓN DE VACACIONES
+                </button>
+            </h2>
+            <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="panel1"
+                 data-bs-parent="#miAccordion">
+                <div class="accordion-body">
+
+                    {% for usuario in usuarios %}
+                        <li>
+                            <div class="col-5">
+                                <a href="{% url 'home' %}">
+                                    <p>{{ usuario.1 }}</p>
+                                </a>
+
+                            </div>
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panel2">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                    SOLICITUDES A CUENTA DE VACACIÓN
+                </button>
+            </h2>
+            <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="panel2"
+                 data-bs-parent="#miAccordion">
+                <div class="accordion-body">
+                    {% for usuario1 in usuarios1 %}
+                        <li>
+                            <label for="reason" class="col-4 col-form-label">Solicitud a cuenta de vacación
+                                desde:</label>
+                            <div class="col-5">
+                                <a href="{% url 'home' %}">
+                                    <p>{{ usuario1.1 }}</p>
+                                </a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panel3">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                    FORMULARIO DE REGISTRO DE ASISTENCIA
+                </button>
+            </h2>
+            <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="panel3"
+                 data-bs-parent="#miAccordion">
+                <div class="accordion-body">
+                    {% for usuario2 in usuarios2 %}
+                        <li>
+                            <div class="col-5">
+                                <a href="{% url 'home' %}">
+                                    <p>{{ usuario2.1 }}</p>
+                                </a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panel4">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                    PERMISOS PERSONAL CON GOCE DE HABERES
+                </button>
+            </h2>
+            <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="panel4"
+                 data-bs-parent="#miAccordion">
+                <div class="accordion-body">{% for usuario3 in usuarios3 %}
+                    <li>
+                        <div class="col-5">
+                            <a href="{% url 'home' %}">
+                                    <p>{{ usuario3.1 }}</p>
+                            </a>
+                        </div>
+                    </li>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panel5">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5">
+                    PERMISO OFICIAL POR HORAS
+                </button>
+            </h2>
+            <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="panel5"
+                 data-bs-parent="#miAccordion">
+                <div class="accordion-body">
+                    {% for usuario in usuarios4 %}
+                        <li>
+                            <div class="col-5">
+                                <a href="{% url 'task_detail' usuario.0 %}">
+                                    <p>{{ usuario.1 }}</p>
+                                </a>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </ul>
+
+{% endblock %}

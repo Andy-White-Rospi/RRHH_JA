@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Boleta de comisión</h1>
+    {{error}}
+    <form action="/commissions/" method="POST">
+        {% csrf_token %}
+
+        <label for="unit" class="col-1 col-form-label">Unidad</label>
+        <div class="col-5">
+                <input name="unit" type="text" class="form-control" id="unit"/>
+        </div>
+
+        <label for="detail" class="col-1 col-form-label">Detalles</label>
+        <div class="col-5">
+                <input name="detail" type="text" class="form-control" id="detail"/>
+        </div>
+
+        <label for="date" class="col-1 col-form-label">Fecha inicio de comisión</label>
+        <div class="col-5">
+            <div class="input-group date" id="datepicker">
+                <input name="startdate" type="date" class="form-control" id="date"/>
+            </div>
+        </div>
+
+        <label for="date" class="col-1 col-form-label">Fecha fin de comisión</label>
+        <div class="col-5">
+            <div class="input-group date" id="datepicker">
+                <input name="finaldate" type="date" class="form-control" id="date"/>
+            </div>
+        </div>
+
+        <button>Save</button>
+    </form>
+
+
+{% endblock %}

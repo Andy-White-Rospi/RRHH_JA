@@ -1,0 +1,58 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Formulario de reprogramación de vacaciones</h1>
+
+    <p>Tienes {{ dias_de_vacacion }} días de vacaciones disponibles.</p>
+    {{ error }}
+    <form action="/vacation_rescheduling/" method="POST">
+        {% csrf_token %}
+
+        <label for="date" class="col-1 col-form-label">Fechas programadas</label>
+        <div class="col-5">
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_programada1_desde" type="date" class="form-control" id="date"/>
+                <input name="fecha_programada1_hasta" type="date" class="form-control" id="date"/>
+            </div>
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_programada2_desde" type="date" class="form-control" id="date"/>
+                <input name="fecha_programada2_hasta" type="date" class="form-control" id="date"/>
+            </div>
+        </div>
+
+        <label for="date" class="col-1 col-form-label">Fechas de reprogramación</label>
+        <div class="col-5">
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_de_reprogramación1_desde" type="date" class="form-control" id="date"/>
+                <input name="fecha_de_reprogramación1_hasta" type="date" class="form-control" id="date"/>
+            </div>
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_de_reprogramación2_desde" type="date" class="form-control" id="date"/>
+                <input name="fecha_de_reprogramación2_hasta" type="date" class="form-control" id="date"/>
+            </div>
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_de_reprogramación3_desde" type="date" class="form-control" id="date"/>
+                <input name="fecha_de_reprogramación3_hasta" type="date" class="form-control" id="date"/>
+            </div>
+
+            <div class="form-group">
+                <label for="numero_entero">Dias habiles:</label>
+                <input type="number" id="numero_entero" name="dias_habiles" class="form-control">
+            </div>
+        </div>
+
+
+        <label for="reason" class="col-1 col-form-label">Motivo de la reprogramación</label>
+        <div class="col-5">
+                <input name="motivos_de_reprogramación" type="text" class="form-control" id="reason"/>
+        </div>
+
+        <label for="detail" class="col-1 col-form-label">Justificación de la reprogramación</label>
+        <div class="col-5">
+                <input name="justificación_de_la_reprogramación" type="text" class="form-control" id="detail"/>
+        </div>
+
+        <button>Save</button>
+    </form>
+{% endblock %}

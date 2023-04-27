@@ -1,0 +1,98 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <div class="container">
+        <a class="navbar-brand" href="/">RRHH App</a>
+        <button
+                class="navbar-toggler"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#navbarNav"
+                aria-controls="navbarNav"
+                aria-expanded="false"
+                aria-label="Toggle navigation"
+        >
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav ms-auto">
+                {#        <li class="nav-item">#}
+                {#          <a href="/" class="nav-link">Principal</a>#}
+                {#        </li>#}
+                {% if user.is_authenticated %}
+                    {% if perms.tasks.view_vacation_rescheduling %}
+                        <li class="nav-item">
+                            <a href="{% url 'approve' %}" class="nav-link">Aprobar solicitudes pendientes</a>
+
+                        </li>
+
+                    {% else %}
+                        <li class="nav-item">
+                        <a href="{% url 'tasks' %}" class="nav-link">Solicitudes pendientes</a>
+
+                        </li>
+
+                    {% endif %}
+
+
+
+                    {#                    <li class="nav-item">#}
+                    {#                        <a href="{% url 'tasks' %}" class="nav-link">Solicitudes pendientes</a>#}
+                    {##}
+                    {#                    </li>#}
+                    <li class="nav-item">
+                        {#                        <a href="{% url 'create_task' %}" class="nav-link">Crear boleta</a>#}
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                Crear Formulario
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="{% url 'registro_de_asistencia' %}">Registro de
+                                    asistencia</a></li>
+                                <li><a class="dropdown-item" href="{% url 'vacation_rescheduling' %}">Reprogramación de
+                                    vacaciones</a></li>
+                                {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Tolerancia</a></li>#}
+                                {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Marcado manual</a></li>#}
+                                {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Vacaciones</a></li>#}
+                            </ul>
+                        </div>
+                    </li>
+                    <li class="mx-2">
+
+                        <div class="dropdown">
+                            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1"
+                                    data-bs-toggle="dropdown" aria-expanded="false">
+                                Crear Permiso
+                            </button>
+                            <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+                                <li><a class="dropdown-item" href="{% url 'official_permit_for_hours' %}">Permiso
+                                    oficial por horas</a></li>
+                                <li><a class="dropdown-item" href="{% url 'personal_leave_with_pay' %}">Permiso personal
+                                    con goce de haberes</a></li>
+                                {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Tolerancia</a></li>#}
+                                {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Marcado manual</a></li>#}
+                                {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Vacaciones</a></li>#}
+                            </ul>
+                        </div>
+
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{% url 'vacation_account_request' %}">Papeleta</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/logout">Logout</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="/signin" class="nav-link">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/signup" class="nav-link">Registrar</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="/signup_RRHH" class="nav-link">Registrar RRHH</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

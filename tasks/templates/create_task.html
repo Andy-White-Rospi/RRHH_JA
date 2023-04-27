@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Formulario de registro de asistencia</h1>
+
+    {{ error }}
+    <form action="/create_task/" method="POST">
+        {% csrf_token %}
+
+        <label for="reason" class="col-1 col-form-label">Motivo</label>
+        <div class="col-5">
+                <input name="reason" type="text" class="form-control" id="reason"/>
+        </div>
+
+        <label for="detail" class="col-1 col-form-label">Detalles</label>
+        <div class="col-5">
+                <input name="detail" type="text" class="form-control" id="detail"/>
+        </div>
+
+        <label for="date" class="col-1 col-form-label">Fecha inicial</label>
+        <div class="col-5">
+            <div class="input-group date" id="datepicker">
+                <input name="startdate" type="date" class="form-control" id="date"/>
+            </div>
+        </div>
+
+        <label for="date" class="col-1 col-form-label">Fecha Final</label>
+        <div class="col-5">
+            <div class="input-group date" id="datepicker">
+                <input name="finaldate" type="date" class="form-control" id="date"/>
+            </div>
+        </div>
+
+        <button>Save</button>
+    </form>
+{% endblock %}

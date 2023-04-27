@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Permiso oficial por horas</h1>
+
+    {{ error }}
+    <form action="/official_permit_for_hours/" method="POST">
+        {% csrf_token %}
+
+
+        <label for="reason" class="col-1 col-form-label">Comisión A:</label>
+        <div class="col-5">
+                <input name="comisión" type="text" class="form-control" id="reason"/>
+        </div>
+
+        <label for="detail" class="col-1 col-form-label">Motivo de la comisión:</label>
+        <div class="col-5">
+                <input name="motivo_de_la_comisión" type="text" class="form-control" id="detail"/>
+        </div>
+
+        <label for="date" class="col-1 col-form-label">Fecha de salida</label>
+        <div class="col-5">
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_de_salida" type="date" class="form-control" id="date"/>
+            </div>
+        </div>
+
+        <label for="hora" class="col-1 col-form-label">De horas:</label>
+        <div class="col-5">
+            <input type="time" id="hora" name="desde_hora" class="form-control" >
+        </div>
+
+        <label for="hora" class="col-1 col-form-label">A horas:</label>
+        <div class="col-5">
+            <input type="time" id="hora" name="hasta_hora" class="form-control" >
+        </div>
+
+
+
+
+        <button>Save</button>
+    </form>
+{% endblock %}

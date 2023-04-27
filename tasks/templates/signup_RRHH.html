@@ -1,0 +1,46 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container">
+  <h1>Registrarse funcionario rrhh</h1>
+
+  {{error}}
+
+  <form action="/signup_RRHH/" method="POST">
+    {% csrf_token %} {{form.as_p}}
+
+      <label for="reason" class="col-1 col-form-label">Nombre:</label>
+        <div class="col-5">
+                <input name="nombre" type="text" class="form-control" id="reason"/>
+        </div>
+
+      <label for="reason" class="col-1 col-form-label">Apellido paterno:</label>
+        <div class="col-5">
+                <input name="a_paterno" type="text" class="form-control" id="reason"/>
+        </div>
+
+      <label for="reason" class="col-1 col-form-label">Apellido materno:</label>
+        <div class="col-5">
+                <input name="a_materno" type="text" class="form-control" id="reason"/>
+        </div>
+
+      <label for="reason" class="col-1 col-form-label">Repartición a la que pertenece:</label>
+        <div class="col-5">
+                <input name="reparticion" type="text" class="form-control" id="reason"/>
+        </div>
+
+      <label for="reason" class="col-1 col-form-label">Fecha de ingreso a trabajar:</label>
+        <div class="col-5">
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_de_ingreso" type="date" class="form-control" id="date"/>
+            </div>
+        </div>
+
+      <label for="reason" class="col-1 col-form-label">Item:</label>
+        <div class="col-5">
+                <input name="item" type="number" class="form-control" id="reason"/>
+        </div>
+
+    <button class="btn btn-primary">Signup</button>
+  </form>
+</div>
+{% endblock %}

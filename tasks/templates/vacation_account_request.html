@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+    <h1>Papeleta de solicitud a cuenta de vacaciones</h1>
+
+    {{ error }}
+    <form action="/vacation_account_request/" method="POST">
+        {% csrf_token %}
+
+        <label for="date" class="col-1 col-form-label">Fecha de solicitud</label>
+        <div class="col-5">
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_de_solicitud" type="date" class="form-control" id="date"/>
+            </div>
+        </div>
+
+        <label for="date" class="col-1 col-form-label">Fechas solicitadas</label>
+        <div class="col-5">
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_solicitada1" type="date" class="form-control" id="date"/>
+                <input name="fecha_solicitada1_hasta" type="date" class="form-control" id="date"/>
+            </div>
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_solicitada2" type="date" class="form-control" id="date"/>
+                <input name="fecha_solicitada2_hasta" type="date" class="form-control" id="date"/>
+            </div>
+
+            <div class="input-group date" id="datepicker">
+                <input name="fecha_solicitada3" type="date" class="form-control" id="date"/>
+                <input name="fecha_solicitada3_hasta" type="date" class="form-control" id="date"/>
+            </div>
+        </div>
+
+
+        <label for="reason" class="col-1 col-form-label">Motivos</label>
+        <div class="col-5">
+                <input name="motivo" type="text" class="form-control" id="reason"/>
+        </div>
+
+        <label for="detail" class="col-1 col-form-label">Justificación</label>
+        <div class="col-5">
+                <input name="justificación" type="text" class="form-control" id="detail"/>
+        </div>
+
+
+        <button>Save</button>
+    </form>
+{% endblock %}

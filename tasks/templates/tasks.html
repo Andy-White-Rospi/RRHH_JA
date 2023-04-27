@@ -1,0 +1,145 @@
+{% extends 'base.html' %} {% block content %}
+
+    <h1>Solicitudes en espera</h1>
+
+    <ul>
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panel1">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse1">
+                    REPROGRAMACIÓN DE VACACIONES
+                </button>
+            </h2>
+            <div id="collapse1" class="accordion-collapse collapse" aria-labelledby="panel1"
+                 data-bs-parent="#miAccordion">
+                <div class="accordion-body">
+
+                    {% for vacation_rescheduling in tasks %}
+                        <li>
+                            {#    <a href="{% url 'task_detail' task.id %}">#}
+                            {#      {% if task.important %}#}
+                            {#      <strong>{{vacation_rescheduling.fecha_programada_1 }}</strong>#}
+                            {#      {% else %} {{task.id}} {{task.reason }} {% endif %}#}
+                            <label for="reason" class="col-4 col-form-label">Reprogramación de vacaciones desde:</label>
+                            <div class="col-5">
+                                <p>{{ vacation_rescheduling.fecha_programada1_desde }}</p>
+                                <a>hasta:</a>
+                                <p>{{ vacation_rescheduling.fecha_programada1_hasta }}</p>
+                            </div>
+
+                            {#      {{task.datecompleted|date:'M j Y:i'}}#}
+                            {#    </a>#}
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        {#        {% for vacation_rescheduling in tasks %}#}
+        {#            <li>#}
+        {#    <a href="{% url 'task_detail' task.id %}">#}
+        {#      {% if task.important %}#}
+        {#      <strong>{{vacation_rescheduling.fecha_programada_1 }}</strong>#}
+        {#      {% else %} {{task.id}} {{task.reason }} {% endif %}#}
+        {#                <label for="reason" class="col-4 col-form-label">Reprogramación de vacaciones desde:</label>#}
+        {#                <div class="col-5">#}
+        {#                    <p>{{ vacation_rescheduling.fecha_programada1_desde }}</p>#}
+        {#                    <a>hasta:</a>#}
+        {#                    <p>{{ vacation_rescheduling.fecha_programada1_hasta }}</p>#}
+        {#                </div>#}
+        {##}
+        {#      {{task.datecompleted|date:'M j Y:i'}}#}
+        {#    </a>#}
+        {#            </li>#}
+        {#        {% endfor %}#}
+
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panel2">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse2">
+                    SOLICITUDES A CUENTA DE VACACIÓN
+                </button>
+            </h2>
+            <div id="collapse2" class="accordion-collapse collapse" aria-labelledby="panel2"
+                 data-bs-parent="#miAccordion">
+                <div class="accordion-body">{% for vacation_account_request in tasks1 %}
+                    <li>
+                        <label for="reason" class="col-4 col-form-label">Solicitud a cuenta de vacación desde:</label>
+                        <div class="col-5">
+                            <p>{{ vacation_account_request.fecha_solicitada1 }}</p>
+                            <a>hasta:</a>
+                            <p>{{ vacation_account_request.fecha_solicitada1_hasta }}</p>
+                        </div>
+                    </li>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panel3">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse3">
+                    FORMULARIO DE REGISTRO DE ASISTENCIA
+                </button>
+            </h2>
+            <div id="collapse3" class="accordion-collapse collapse" aria-labelledby="panel3"
+                 data-bs-parent="#miAccordion">
+                <div class="accordion-body">
+                    {% for register_assistence in tasks2 %}
+                        <li>
+                            <label for="reason" class="col-4 col-form-label">Motivo del registro manual:</label>
+                            <div class="col-5">
+                                <p>{{ register_assistence.reason }}</p>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panel4">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse4">
+                    PERMISOS PERSONAL CON GOCE DE HABERES
+                </button>
+            </h2>
+            <div id="collapse4" class="accordion-collapse collapse" aria-labelledby="panel4"
+                 data-bs-parent="#miAccordion">
+                <div class="accordion-body">{% for personal_leave_with_pay in tasks3 %}
+                    <li>
+                        <label for="reason" class="col-4 col-form-label">Permiso personal con goce de haberes
+                            desde:</label>
+                        <div class="col-5">
+                            <p>{{ personal_leave_with_pay.salida_desde_hora }}</p>
+                            <a>hasta:</a>
+                            <p>{{ personal_leave_with_pay.salida_hasta_hora }}</p>
+                        </div>
+                    </li>
+                {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="accordion-item">
+            <h2 class="accordion-header" id="panel5">
+                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapse5">
+                    PERMISO OFICIAL POR HORAS
+                </button>
+            </h2>
+            <div id="collapse5" class="accordion-collapse collapse" aria-labelledby="panel5"
+                 data-bs-parent="#miAccordion">
+                <div class="accordion-body">
+                    {% for Official_permit_for_hours in tasks4 %}
+                        <li>
+                            <label for="reason" class="col-4 col-form-label">Comisión a:</label>
+                            <div class="col-5">
+                                <p>{{ Official_permit_for_hours.comisión }}</p>
+                            </div>
+                        </li>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+    </ul>
+
+{% endblock %}
