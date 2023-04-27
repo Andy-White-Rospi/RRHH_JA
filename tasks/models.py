@@ -66,10 +66,13 @@ class Official_permit_for_hours(models.Model):
   comisión = models.CharField(max_length=200,null=True, blank=True)
   motivo_de_la_comisión = models.CharField(max_length=500,null=True, blank=True)
   fecha_de_salida = models.DateTimeField(null=True, blank=True)
-  desde_hora = models.TimeField(verbose_name='Hora del día',null=True, blank=True)
-  hasta_hora = models.TimeField(verbose_name='Hora del día',null=True, blank=True)
+  desde_hora_m = models.TimeField(verbose_name='Hora del día',null=True, blank=True)
+  hasta_hora_m = models.TimeField(verbose_name='Hora del día',null=True, blank=True)
+  desde_hora_t = models.TimeField(verbose_name='Hora del día',null=True, blank=True)
+  hasta_hora_t = models.TimeField(verbose_name='Hora del día',null=True, blank=True)
   aprobacion = models.BooleanField(default=False,null=True, blank=True)
   dateapproved = models.DateTimeField(null=True, blank=True)
+  horas_de_permiso = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, default=0)
   user = models.ForeignKey(User, on_delete=models.CASCADE,null=True, blank=True)
 
 class Personal_leave_with_pay(models.Model):
@@ -108,6 +111,7 @@ class Data_user(models.Model):
   fecha_de_ingreso = models.DateTimeField(null=True, blank=True)
   dias_de_vacacion = models.IntegerField(null=True, blank=True, default=0)
   fecha_en_que_se_asigno_vacacion = models.DateTimeField(null=False, blank=False, default=date(2000,1,1))
+  horas_con_goce_de_haberes = models.DecimalField(max_digits=5, decimal_places=2, null=True, blank=True, default=0)
   user = models.ForeignKey(User, on_delete=models.CASCADE)
 
 class Horas_laborales(models.Model):

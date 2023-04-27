@@ -1,4 +1,4 @@
-from django.forms import ModelForm
+from django.forms import ModelForm, TimeInput, DateInput
 from .models import Task, Commission, Register_assistence, Vacation_rescheduling, \
                     Official_permit_for_hours, Personal_leave_with_pay, Vacation_account_request, Data_user
 
@@ -15,6 +15,11 @@ class Register_assistenceForm(ModelForm):
     class Meta:
         model = Register_assistence
         fields = ['date', 'hora_ingreso_mañana','hora_salida_mañana','hora_ingreso_tarde','hora_salida_tarde','reason','constancy']
+        widgets = {'date': DateInput(attrs={'type': 'date', 'required': True}),
+                   'hora_ingreso_mañana': TimeInput(format='%H:%M', attrs={'type': 'time', 'step': 1, 'required': False}),
+                   'hora_salida_mañana': TimeInput(format='%H:%M', attrs={'type': 'time', 'step': 1, 'required': False}),
+                   'hora_ingreso_tarde': TimeInput(format='%H:%M', attrs={'type': 'time', 'step': 1, 'required': False}),
+                   'hora_salida_tarde': TimeInput(format='%H:%M', attrs={'type': 'time', 'step': 1, 'required': False})}
 
 class Vacation_reschedulingForm(ModelForm):
     class Meta:
@@ -27,7 +32,11 @@ class Vacation_reschedulingForm(ModelForm):
 class Official_permit_for_hoursForm(ModelForm):
     class Meta:
         model = Official_permit_for_hours
-        fields = ['comisión','motivo_de_la_comisión','fecha_de_salida','desde_hora','hasta_hora']
+        fields = ['comisión','motivo_de_la_comisión','fecha_de_salida','desde_hora_m','hasta_hora_m','desde_hora_t','hasta_hora_t']
+        widgets = {'desde_hora_m': TimeInput(format='%H:%M', attrs={'type': 'time', 'step': 1, 'required': False}),
+                   'hasta_hora_m': TimeInput(format='%H:%M', attrs={'type': 'time', 'step': 1, 'required': False}),
+                   'desde_hora_t': TimeInput(format='%H:%M', attrs={'type': 'time', 'step': 1, 'required': False}),
+                   'hasta_hora_t': TimeInput(format='%H:%M', attrs={'type': 'time', 'step': 1, 'required': False})}
 
 class Personal_leave_with_payForm(ModelForm):
     class Meta:

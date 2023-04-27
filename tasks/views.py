@@ -180,12 +180,55 @@ def registro_de_asistencia(request):
     else:
         try:
             form = Register_assistenceForm(request.POST)
-            new_task = form.save(commit=False)
-            new_task.user = request.user
-            new_task.save()
-            return redirect('tasks')
+            if form.is_valid():
+                fecha = form.cleaned_data['date']
+                desde_hora_m = form.cleaned_data['hora_ingreso_mañana']
+                hasta_hora_m = form.cleaned_data['hora_salida_mañana']
+                desde_hora_t = form.cleaned_data['hora_ingreso_tarde']
+                hasta_hora_t = form.cleaned_data['hora_salida_tarde']
+                fecha_actual = timezone.now()
+                if(fecha>fecha_actual):
+                    return render(request, 'register_of_assistence.html',
+                                  {"form": Register_assistenceForm, "error": "La fecha no puede ser posterior al día de hoy"})
+                if desde_hora_m is None:
+                    if hasta_hora_m is None:
+                        if desde_hora_t is None:
+                            if hasta_hora_t is None:
+                                return render(request, 'register_of_assistence.html',
+                                              {"form": Register_assistenceForm, "error": "Ningun horario introducido"})
+                else:
+                    query = Q(ingreso_mañana__lte=desde_hora_m) & Q(salida_mañana__gte=desde_hora_m)
+                    horario_valido = Horas_laborales.objects.filter(query).exists()
+                    if horario_valido==False:
+                        return render(request, 'register_of_assistence.html',
+                                      {"form": Register_assistenceForm, "error": "Fuera del horario de la mañana"})
+                if hasta_hora_m is not None:
+                    query = Q(ingreso_mañana__lte=hasta_hora_m) & Q(salida_mañana__gte=hasta_hora_m)
+                    horario_valido = Horas_laborales.objects.filter(query).exists()
+                    if horario_valido==False:
+                        return render(request, 'register_of_assistence.html',
+                                      {"form": Register_assistenceForm, "error": "Fuera del horario de la mañana"})
+                if desde_hora_t is not None:
+                    query = Q(ingreso_tarde__lte=desde_hora_t) & Q(salida_tarde__gte=desde_hora_t)
+                    horario_valido = Horas_laborales.objects.filter(query).exists()
+                    if horario_valido==False:
+                        return render(request, 'register_of_assistence.html',
+                                      {"form": Register_assistenceForm, "error": "Fuera del horario de la tarde"})
+                if hasta_hora_t is not None:
+                    query = Q(ingreso_tarde__lte=hasta_hora_t) & Q(salida_tarde__gte=hasta_hora_t)
+                    horario_valido = Horas_laborales.objects.filter(query).exists()
+                    if horario_valido==False:
+                        return render(request, 'register_of_assistence.html',
+                                      {"form": Register_assistenceForm, "error": "Fuera del horario de la tarde"})
+                new_registro_de_asistencia = form.save(commit=False)
+                new_registro_de_asistencia.user = request.user
+                new_registro_de_asistencia.save()
+                return redirect('tasks')
+            else:
+                return render(request, 'register_of_assistence.html',
+                              {"form": Register_assistenceForm, "error": "Error"})
         except ValueError:
-            return render(request, 'register_of_assistence.html', {"form": Register_assistenceForm, "error": "Error creating task."+ new_task+"Hola"})
+            return render(request, 'register_of_assistence.html', {"form": Register_assistenceForm, "error": "Error"})
 
 @login_required
 def vacation_rescheduling(request):
@@ -204,6 +247,64 @@ def vacation_rescheduling(request):
         except ValueError:
             return render(request, 'vacation_rescheduling.html', {"form": Vacation_reschedulingForm, "error": "Error creating task."+ new_task+"Hola",'dias_de_vacacion': dias_de_vacacion,})
 
+def horas_laborales_validas_mañana(desde_hora,hasta_hora):
+    query = Q(ingreso_mañana__lte=desde_hora) & Q(salida_mañana__gte=desde_hora)
+    query1 = Q(ingreso_tarde__lte=desde_hora) & Q(salida_tarde__gte=desde_hora)
+    query2 = Q(ingreso_mañana__lte=hasta_hora) & Q(salida_mañana__gte=hasta_hora)
+    query3 = Q(ingreso_tarde__lte=hasta_hora) & Q(salida_tarde__gte=hasta_hora)
+    horario_valido = Horas_laborales.objects.filter(query).exists()
+    horario_valido1 = Horas_laborales.objects.filter(query1).exists()
+    horario_valido2 = Horas_laborales.objects.filter(query2).exists()
+    horario_valido3 = Horas_laborales.objects.filter(query3).exists()
+    if (horario_valido == True):
+        if (horario_valido2 == True):
+            mañana=True
+            error_hora = False
+            if hasta_hora<desde_hora:
+                error_hora=True
+            return mañana, error_hora
+        else:
+            mañana=False
+            error_hora=False
+    else:
+        mañana = False
+        error_hora=False
+    return mañana, error_hora
+
+def ingreso_de_fecha_actual(fecha):
+    fecha_actual = timezone.now()
+    if (fecha_actual<fecha):
+        correcto=True
+    else:
+        if ((fecha.year==fecha_actual.year)&(fecha.month==fecha_actual.month)&(fecha.day==fecha_actual.day)):
+            correcto = True
+        else:
+            correcto=False
+    return correcto
+
+
+
+def horas_laborales_validas_tarde(desde_hora,hasta_hora):
+    query1 = Q(ingreso_tarde__lte=desde_hora) & Q(salida_tarde__gte=desde_hora)
+    query3 = Q(ingreso_tarde__lte=hasta_hora) & Q(salida_tarde__gte=hasta_hora)
+    horario_valido1 = Horas_laborales.objects.filter(query1).exists()
+    horario_valido3 = Horas_laborales.objects.filter(query3).exists()
+    if (horario_valido1 == True):
+        if (horario_valido3 == True):
+            tarde = True
+            error_hora = False
+            if hasta_hora<desde_hora:
+                error_hora=True
+            return tarde, error_hora
+        else:
+            tarde = False
+            error_hora=False
+    else:
+        tarde = False
+        error_hora=False
+    return tarde, error_hora
+
+
 @login_required
 def official_permit_for_hours(request):
     if request.method == "GET":
@@ -212,22 +313,66 @@ def official_permit_for_hours(request):
         try:
             form = Official_permit_for_hoursForm(request.POST)
             if form.is_valid():
-                desde_hora = form.cleaned_data['desde_hora']
-                query = Q(ingreso_mañana__lte=desde_hora) & Q(salida_mañana__gte=desde_hora)
-                query1 = Q(ingreso_tarde__lte=desde_hora) & Q(salida_tarde__gte=desde_hora)
-                horario_valido = Horas_laborales.objects.filter(query).exists()
-                horario_valido1 = Horas_laborales.objects.filter(query1).exists()
-                if ((horario_valido==True)|(horario_valido1==True)):
-                    new_task = form.save(commit=False)
-                    new_task.user = request.user
-                    new_task.save()
-                    return redirect('tasks')
+                diferencia_horas = 0.0
+                fecha = form.cleaned_data['fecha_de_salida']
+                desde_hora_m = form.cleaned_data['desde_hora_m']
+                hasta_hora_m = form.cleaned_data['hasta_hora_m']
+                desde_hora_t = form.cleaned_data['desde_hora_t']
+                hasta_hora_t = form.cleaned_data['hasta_hora_t']
+                if((desde_hora_m is not None)&(hasta_hora_m is not None)):
+                    resultado_m=horas_laborales_validas_mañana(desde_hora_m,hasta_hora_m)
+                    if resultado_m[1]==True:
+                        return render(request, 'official_permit_for_hours.html', {"form": Official_permit_for_hoursForm, "error": "Horas introducidas en el orden incorrecto"})
+                    else:
+                        if resultado_m[0]==False:
+                            return render(request, 'official_permit_for_hours.html', {"form": Official_permit_for_hoursForm, "error": "Fuera del horario de la mañana"})
+                        else:
+                            hasta=hasta_hora_m.hour
+                            desde= desde_hora_m.hour
+                            hasta_min=hasta_hora_m.minute/60
+                            desde_min=desde_hora_m.minute/60
+                            hasta_decimal=hasta+hasta_min
+                            desde_decimal=desde+desde_min
+                            diferencia_horas = hasta_decimal - desde_decimal
+                            diferencia_horas= round(float(diferencia_horas), 2)
                 else:
-                    return render(request, 'official_permit_for_hours.html', {"form": Official_permit_for_hoursForm,
-                                                                              "error": "Fuera del horario laboral"})
+                    if ((desde_hora_t is not None) & (hasta_hora_t is not None)):
+                        pass
+                    else:
+                        return render(request, 'official_permit_for_hours.html', {"form": Official_permit_for_hoursForm, "error": "Rango de horas no definido"})
+                if ((desde_hora_t is not None) & (hasta_hora_t is not None)):
+                    resultado_t=horas_laborales_validas_tarde(desde_hora_t,hasta_hora_t)
+                    if resultado_t[1]==True:
+                        return render(request, 'official_permit_for_hours.html', {"form": Official_permit_for_hoursForm, "error": "Horas introducidas en el orden incorrecto"})
+                    else:
+                        if resultado_t[0]==False:
+                            return render(request, 'official_permit_for_hours.html', {"form": Official_permit_for_hoursForm, "error": "Fuera del horario de la tarde"})
+                        else:
+                            hasta=hasta_hora_t.hour
+                            desde= desde_hora_t.hour
+                            hasta_min=hasta_hora_t.minute/60
+                            desde_min=desde_hora_t.minute/60
+                            hasta_decimal=hasta+hasta_min
+                            desde_decimal=desde+desde_min
+                            diferencia_horas_t = hasta_decimal - desde_decimal
+                            diferencia_horas=diferencia_horas_t+diferencia_horas
+                            diferencia_horas= round(float(diferencia_horas), 2)
+
+                resultado=ingreso_de_fecha_actual(fecha)
+                if resultado==False:
+                    return render(request, 'official_permit_for_hours.html', {"form": Official_permit_for_hoursForm, "error": "No puede ingresar fechas anteriores a la actual"})
+
+                new_official_permit_for_hours = form.save(commit=False)
+                new_official_permit_for_hours.user = request.user
+                new_official_permit_for_hours.horas_de_permiso = diferencia_horas
+                new_official_permit_for_hours.save()
+                return redirect('tasks')
+            else:
+                return redirect('official_permit_for_hours.html')
+
 
         except ValueError:
-            return render(request, 'official_permit_for_hours.html', {"form": Official_permit_for_hoursForm, "error": "Error creating task."+ new_task+"Hola"})
+            return render(request, 'official_permit_for_hours.html', {"form": Official_permit_for_hoursForm, "error": "Error"})
 
 @login_required
 def personal_leave_with_pay(request):
@@ -236,10 +381,13 @@ def personal_leave_with_pay(request):
     else:
         try:
             form = Personal_leave_with_payForm(request.POST)
-            new_task = form.save(commit=False)
-            new_task.user = request.user
-            new_task.save()
-            return redirect('tasks')
+            if form.is_valid():
+                fecha = form.cleaned_data['fecha_de_salida']
+                desde_hora_m = form.cleaned_data['hora_ingreso_mañana']
+                new_task = form.save(commit=False)
+                new_task.user = request.user
+                new_task.save()
+                return redirect('tasks')
         except ValueError:
             return render(request, 'personal_leave_with_pay.html', {"form": Personal_leave_with_payForm, "error": "Error creating task."+ new_task+"Hola"})
 

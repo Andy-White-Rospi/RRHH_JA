@@ -11,38 +11,38 @@
         <label for="date" class="col-1 col-form-label">Fecha</label>
         <div class="col-5">
             <div class="input-group date" id="datepicker">
-                <input name="date" type="date" class="form-control" id="date"/>
+                <input name="date" type="date" class="form-control" id="date"required/>
             </div>
         </div>
 
         <label for="hora" class="col-1 col-form-label">Hora de ingreso mañana:</label>
         <div class="col-5">
-            <input type="time" id="hora" name="hora_ingreso_mañana" class="form-control" min="07:30" max="09:00">
+            <input type="time" id="hora" name="hora_ingreso_mañana" class="form-control" >
         </div>
 
         <label for="hora" class="col-1 col-form-label">Hora de salida mañana:</label>
         <div class="col-5">
-            <input type="time" id="hora" name="hora_salida_mañana" class="form-control" min="14:30" max="17:00">
+            <input type="time" id="hora" name="hora_salida_mañana" class="form-control">
         </div>
 
         <label for="hora" class="col-1 col-form-label">Hora de ingreso tarde:</label>
         <div class="col-5">
-            <input type="time" id="hora" name="hora_ingreso_tarde" class="form-control" min="07:30" max="11:00">
+            <input type="time" id="hora" name="hora_ingreso_tarde" class="form-control">
         </div>
 
         <label for="hora" class="col-1 col-form-label">Hora de salida tarde:</label>
         <div class="col-5">
-            <input type="time" id="hora" name="hora_salida_tarde" class="form-control" min="14:30" max="17:00">
+            <input type="time" id="hora" name="hora_salida_tarde" class="form-control">
         </div>
 
         <label for="reason" class="col-1 col-form-label">Motivo del registro manual</label>
         <div class="col-5">
-            <input name="reason" type="text" class="form-control" id="reason"/>
+            <input name="reason" type="text" class="form-control" id="reason"required/>
         </div>
 
         <label for="detail" class="col-1 col-form-label">Constancia de asistencia</label>
         <div class="col-5">
-            <input name="constancy" type="text" class="form-control" id="detail"/>
+            <input name="constancy" type="text" class="form-control" id="detail"required/>
         </div>
         <button>Save</button>
     </form>
