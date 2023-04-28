@@ -1,6 +1,8 @@
 <nav class="navbar navbar-dark bg-dark fixed-top">
     <div class="container-fluid">
+
         <a class="navbar-brand" href="/">RRHH App</a>
+
         <button
                 class="navbar-toggler"
                 type="button"
@@ -12,6 +14,7 @@
         >
             <span class="navbar-toggler-icon"></span>
         </button>
+
         <div class="offcanvas offcanvas-end text-bg-dark" tabindex="-1" id="offcanvasDarkNavbar"
              aria-labelledby="offcanvasDarkNavbarLabel">
             <div class="offcanvas-header">
@@ -35,13 +38,6 @@
                             </li>
 
                         {% endif %}
-
-
-
-                        {#                    <li class="nav-item">#}
-                        {#                        <a href="{% url 'tasks' %}" class="nav-link">Solicitudes pendientes</a>#}
-                        {##}
-                        {#                    </li>#}
                         <li class="nav-item">
                             {#                        <a href="{% url 'create_task' %}" class="nav-link">Crear boleta</a>#}
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -54,11 +50,9 @@
                                 <li><a class="dropdown-item" href="{% url 'vacation_rescheduling' %}">Reprogramación
                                     de
                                     vacaciones</a></li>
+                                <li><a class="dropdown-item" href="{% url 'vacation_account_request' %}">Papeleta de
+                                    vacaciones</a></li>
                             </ul>
-                            {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Tolerancia</a></li>#}
-                            {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Marcado manual</a></li>#}
-                            {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Vacaciones</a></li>#}
-
                         </li>
                         <li class="nav-item">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown"
@@ -71,18 +65,11 @@
                                 <li><a class="dropdown-item" href="{% url 'personal_leave_with_pay' %}">Permiso
                                     personal
                                     con goce de haberes</a></li>
-                                {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Tolerancia</a></li>#}
-                                {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Marcado manual</a></li>#}
-                                {#                                <li><a class="dropdown-item" href="{% url 'create_task' %}">Vacaciones</a></li>#}
                             </ul>
 
-
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="{% url 'vacation_account_request' %}">Papeleta</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/logout">Logout</a>
+                            <a class="btn btn-danger" type="button" href="/logout">Logout</a>
                         </li>
                     {% else %}
                         <li class="nav-item">
@@ -96,11 +83,11 @@
                         </li>
                     {% endif %}
                 </ul>
-{#TODO: scomponente de busqueda implementar luego#}
-{#                <form class="d-flex mt-3" role="search">#}
-{#                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">#}
-{#                    <button class="btn btn-success" type="submit">Search</button>#}
-{#                </form>#}
+                {#TODO: scomponente de busqueda implementar luego#}
+                {#                <form class="d-flex mt-3" role="search">#}
+                {#                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">#}
+                {#                    <button class="btn btn-success" type="submit">Search</button>#}
+                {#                </form>#}
             </div>
         </div>
     </div>
