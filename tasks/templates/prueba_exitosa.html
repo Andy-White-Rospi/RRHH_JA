@@ -1,0 +1,23 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<h1>Permiso oficial por horas</h1>
+
+{{error}}
+
+<form method="POST">
+  {% csrf_token %}
+  {% for field in form %}
+    <div class="form-group">
+      <label>{{ field.label }}</label>
+      <input type="{{ field.widget.input_type }}" class="form-control" value="{{ field.value }}" readonly>
+    </div>
+  {% endfor %}
+
+  <button>
+    Update
+  </button>
+</form>
+
+{% endblock %}
