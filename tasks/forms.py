@@ -1,4 +1,4 @@
-from django.forms import ModelForm, TimeInput, DateInput
+from django.forms import ModelForm, TimeInput, DateInput, forms
 from .models import Task, Commission, Register_assistence, Vacation_rescheduling, \
                     Official_permit_for_hours, Personal_leave_with_pay, Vacation_account_request, Data_user
 
@@ -42,15 +42,18 @@ class Personal_leave_with_payForm(ModelForm):
     class Meta:
         model = Personal_leave_with_pay
         fields = ['compensación','fecha_de_compensación','compensación_desde_hora','compensación_hasta_hora'
-                ,'fecha_de_salida','salida_desde_hora','salida_hasta_hora']
+                ,'fecha_de_salida','salida_desde_hora_m','salida_hasta_hora_m','salida_desde_hora_t','salida_hasta_hora_t']
 
 class Vacation_account_requestForm(ModelForm):
     class Meta:
         model = Vacation_account_request
         fields = ['fecha_de_solicitud','fecha_solicitada1','fecha_solicitada1_hasta',
-                  'fecha_solicitada2','fecha_solicitada2_hasta','fecha_solicitada3','fecha_solicitada3_hasta',
-                  'motivo','justificación']
+                  'fecha_solicitada2','fecha_solicitada2_hasta','fecha_solicitada3','fecha_solicitada3_hasta','dias_habiles_programados',
+                  'justificación']
 class Data_userForm(ModelForm):
     class Meta:
         model = Data_user
         fields = ['nombre','a_paterno','a_materno','reparticion','item','fecha_de_ingreso','dias_de_vacacion']
+
+# class FeedbackForm(ModelForm):
+#     comentario = forms.

@@ -9,27 +9,27 @@
         {% csrf_token %}
 
 
-        <label for="reason" class="col-1 col-form-label">Compensación:</label>
-        <div class="col-5">
-                <input name="compensación" type="text" class="form-control" id="reason"/>
-        </div>
-
-        <label for="date" class="col-1 col-form-label">Fecha de compensación</label>
-        <div class="col-5">
-            <div class="input-group date" id="datepicker">
-                <input name="fecha_de_compensación" type="date" class="form-control" id="date"/>
-            </div>
-        </div>
-
-        <label for="hora" class="col-1 col-form-label">Compensación de horas:</label>
-        <div class="col-5">
-            <input type="time" id="hora" name="compensación_desde_hora" class="form-control" >
-        </div>
-
-        <label for="hora" class="col-1 col-form-label">a horas:</label>
-        <div class="col-5">
-            <input type="time" id="hora" name="compensación_hasta_hora" class="form-control" >
-        </div>
+{#        <label for="reason" class="col-1 col-form-label">Compensación:</label>#}
+{#        <div class="col-5">#}
+{#                <input name="compensación" type="text" class="form-control" id="reason"/>#}
+{#        </div>#}
+{##}
+{#        <label for="date" class="col-1 col-form-label">Fecha de compensación</label>#}
+{#        <div class="col-5">#}
+{#            <div class="input-group date" id="datepicker">#}
+{#                <input name="fecha_de_compensación" type="date" class="form-control" id="date"/>#}
+{#            </div>#}
+{#        </div>#}
+{##}
+{#        <label for="hora" class="col-1 col-form-label">Compensación de horas:</label>#}
+{#        <div class="col-5">#}
+{#            <input type="time" id="hora" name="compensación_desde_hora" class="form-control" >#}
+{#        </div>#}
+{##}
+{#        <label for="hora" class="col-1 col-form-label">a horas:</label>#}
+{#        <div class="col-5">#}
+{#            <input type="time" id="hora" name="compensación_hasta_hora" class="form-control" >#}
+{#        </div>#}
 
         <label for="date" class="col-1 col-form-label">Fecha de salida</label>
         <div class="col-5">
@@ -38,14 +38,24 @@
             </div>
         </div>
 
-        <label for="hora" class="col-1 col-form-label">Salida de horas:</label>
+        <label for="hora" class="col-1 col-form-label">Salida en la mañana de horas:</label>
         <div class="col-5">
-            <input type="time" id="hora" name="salida_desde_hora" class="form-control" >
+            <input type="time" id="hora" name="salida_desde_hora_m" class="form-control" >
         </div>
 
         <label for="hora" class="col-1 col-form-label">a horas:</label>
         <div class="col-5">
-            <input type="time" id="hora" name="salida_hasta_hora" class="form-control" >
+            <input type="time" id="hora" name="salida_hasta_hora_m" class="form-control" >
+        </div>
+
+        <label for="hora" class="col-1 col-form-label">Salida en la tarde de horas:</label>
+        <div class="col-5">
+            <input type="time" id="hora" name="salida_desde_hora_t" class="form-control" >
+        </div>
+
+        <label for="hora" class="col-1 col-form-label">a horas:</label>
+        <div class="col-5">
+            <input type="time" id="hora" name="salida_hasta_hora_t" class="form-control" >
         </div>
 
 

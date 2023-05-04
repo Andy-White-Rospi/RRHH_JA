@@ -77,12 +77,12 @@ WSGI_APPLICATION = 'djangocrud.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'rrhh',
+        'NAME': 'webrrhh',
         'USER': 'postgres',
-        'PASSWORD': 'example',
+        'PASSWORD': 'postgres',
         # 'HOST': 'debian-server.brazilsouth.cloudapp.azure.com',
-        'HOST': '192.168.1.200',
-        'PORT': '5432',
+        'HOST': 'localhost',
+        'PORT': '5433',
     }
 }
 

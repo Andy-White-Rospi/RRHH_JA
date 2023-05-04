@@ -3,7 +3,7 @@
 {% block content %}
 
     <h1>Papeleta de solicitud a cuenta de vacaciones</h1>
-
+    <p>Tienes {{ dias_de_vacacion }} días de vacaciones disponibles.</p>
     {{ error }}
     <form action="/vacation_account_request/" method="POST">
         {% csrf_token %}
@@ -11,7 +11,7 @@
         <label for="date" class="col-1 col-form-label">Fecha de solicitud</label>
         <div class="col-5">
             <div class="input-group date" id="datepicker">
-                <input name="fecha_de_solicitud" type="date" class="form-control" id="date"/>
+                <input name="fecha_de_solicitud" type="date" class="form-control" id="date" required/>
             </div>
         </div>
 
@@ -33,14 +33,15 @@
         </div>
 
 
-        <label for="reason" class="col-1 col-form-label">Motivos</label>
+        <label for="detail" class="col-10 col-form-label">Dias habiles que se estan programando</label>
         <div class="col-5">
-                <input name="motivo" type="text" class="form-control" id="reason"/>
+                <input name="dias_habiles_programados"  type="number" step="any"  class="form-control" id="detail"required/>
         </div>
+
 
         <label for="detail" class="col-1 col-form-label">Justificación</label>
         <div class="col-5">
-                <input name="justificación" type="text" class="form-control" id="detail"/>
+                <input name="justificación" type="text" class="form-control" id="detail"required/>
         </div>
 
 

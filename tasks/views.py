@@ -34,6 +34,20 @@ def tiempo_de_trabajo(usuario):
     anios_de_trabajo = int(diferencia.years)
     return anios_de_trabajo
 
+def asignar_hora_con_goce(usuario):
+    data_usuario = Data_user.objects.get(id=usuario)
+    fecha_asignacion = data_usuario.fecha_en_que_se_asigno_dias_goce
+    fecha_actual = timezone.now()
+    año_actual=fecha_actual.year
+    mes_actual=fecha_actual.month
+    mes = fecha_asignacion.month  # Extrae el mes de la fecha
+    dif_mes = mes_actual - mes
+    if ((dif_mes>0)|(dif_mes==-11)):
+        data_usuario.horas_con_goce_de_haberes = 0
+        nueva_asignacion = date(año_actual,mes_actual,1)
+        data_usuario.fecha_en_que_se_asigno_dias_goce = nueva_asignacion
+        data_usuario.save()
+
 def asignar_vacaciones(usuario):
     data_usuario = Data_user.objects.get(id=usuario)
     fecha_registro = data_usuario.fecha_de_ingreso
@@ -99,7 +113,6 @@ def signup(request):
 
         return render(request, 'signup.html', {"form": UserCreationForm, "error": "Passwords did not match."})
 
-
 def signupRRHH(request):
     if request.method == 'GET':
         return render(request, 'signup_RRHH.html', {"form": UserCreationForm})
@@ -137,7 +150,6 @@ def approve(request):
     asignar_vacaciones(id_data_user)
     return render(request,'approve.html', {"usuarios":usuarios,"usuarios1":usuarios1,"usuarios2":usuarios2,"usuarios3":usuarios3,"usuarios4":usuarios4})
 
-
 @login_required
 def tasks(request):
     tasks = Vacation_rescheduling.objects.filter(user=request.user)
@@ -166,12 +178,10 @@ def commission(request):
             return render(request, 'commission.html',
                           {"form": TaskForm, "error": "Error creating task." + new_task + "Hola"})
 
-
 @login_required
 def tasks_completed(request):
     tasks = Task.objects.filter(user=request.user, datecompleted__isnull=False).order_by('-datecompleted')
     return render(request, 'tasks.html', {"tasks": tasks})
-
 
 @login_required
 def registro_de_asistencia(request):
@@ -232,11 +242,8 @@ def registro_de_asistencia(request):
 
 @login_required
 def vacation_rescheduling(request):
-    id_user = request.user.id
-    data_vacation = Data_user.objects.get(user_id=id_user)
-    dias_de_vacacion = data_vacation.dias_de_vacacion
     if request.method == "GET":
-        return render(request, 'vacation_rescheduling.html', {"form": Vacation_reschedulingForm,'dias_de_vacacion': dias_de_vacacion,})
+        return render(request, 'vacation_rescheduling.html', {"form": Vacation_reschedulingForm,})
     else:
         try:
             form = Vacation_reschedulingForm(request.POST)
@@ -245,7 +252,7 @@ def vacation_rescheduling(request):
             new_task.save()
             return redirect('tasks')
         except ValueError:
-            return render(request, 'vacation_rescheduling.html', {"form": Vacation_reschedulingForm, "error": "Error creating task."+ new_task+"Hola",'dias_de_vacacion': dias_de_vacacion,})
+            return render(request, 'vacation_rescheduling.html', {"form": Vacation_reschedulingForm, "error": "Error creating task."+ new_task+"Hola",})
 
 def horas_laborales_validas_mañana(desde_hora,hasta_hora):
     query = Q(ingreso_mañana__lte=desde_hora) & Q(salida_mañana__gte=desde_hora)
@@ -282,8 +289,6 @@ def ingreso_de_fecha_actual(fecha):
             correcto=False
     return correcto
 
-
-
 def horas_laborales_validas_tarde(desde_hora,hasta_hora):
     query1 = Q(ingreso_tarde__lte=desde_hora) & Q(salida_tarde__gte=desde_hora)
     query3 = Q(ingreso_tarde__lte=hasta_hora) & Q(salida_tarde__gte=hasta_hora)
@@ -303,7 +308,6 @@ def horas_laborales_validas_tarde(desde_hora,hasta_hora):
         tarde = False
         error_hora=False
     return tarde, error_hora
-
 
 @login_required
 def official_permit_for_hours(request):
@@ -377,43 +381,165 @@ def official_permit_for_hours(request):
 @login_required
 def personal_leave_with_pay(request):
     if request.method == "GET":
+        usuario = request.user.id
+        data_usuario = Data_user.objects.get(user_id=usuario)
+        id_data_user = data_usuario.id
+        asignar_hora_con_goce(id_data_user)
         return render(request, 'personal_leave_with_pay.html', {"form": Personal_leave_with_payForm})
     else:
         try:
             form = Personal_leave_with_payForm(request.POST)
             if form.is_valid():
+                diferencia_horas = 0.0
                 fecha = form.cleaned_data['fecha_de_salida']
-                desde_hora_m = form.cleaned_data['hora_ingreso_mañana']
+                desde_hora_m = form.cleaned_data['salida_desde_hora_m']
+                hasta_hora_m = form.cleaned_data['salida_hasta_hora_m']
+                desde_hora_t = form.cleaned_data['salida_desde_hora_t']
+                hasta_hora_t = form.cleaned_data['salida_hasta_hora_t']
+                usuario = request.user.id
+                data_usuario = Data_user.objects.get(user_id=usuario)
+                horas_usadas = data_usuario.horas_con_goce_de_haberes
+                horas_usadas=float(horas_usadas)
+                fecha_val=ingreso_de_fecha_actual(fecha)
+                resultado = ingreso_de_fecha_actual(fecha)
+                if horas_usadas >= 8.0:
+                    return render(request, 'personal_leave_with_pay.html', {"form": Personal_leave_with_payForm,
+                                                                            "error": "Usted ya ha ocupado 8 horas de permiso con goce de haberes"})
+
+                if resultado == False:
+                    return render(request, 'personal_leave_with_pay.html', {"form": Personal_leave_with_payForm,
+                                                                              "error": "No puede ingresar fechas anteriores a la actual"})
+
+                if fecha_val==False:
+                    return render(request, 'personal_leave_with_pay.html', {"form": Personal_leave_with_payForm,
+                                                                            "error": "La fecha debe ser posterior al día de hoy"})
+
+
+
+
+                if ((desde_hora_m is not None) & (hasta_hora_m is not None)):
+                    resultado_m = horas_laborales_validas_mañana(desde_hora_m, hasta_hora_m)
+                    if resultado_m[1] == True:
+                        return render(request, 'personal_leave_with_pay.html', {"form": Personal_leave_with_payForm,
+                                                                                  "error": "Horas introducidas en el orden incorrecto"})
+                    else:
+                        if resultado_m[0] == False:
+                            return render(request, 'personal_leave_with_pay.html',
+                                          {"form": Personal_leave_with_payForm,
+                                           "error": "Fuera del horario de la mañana"})
+                        else:
+                            hasta = hasta_hora_m.hour
+                            desde = desde_hora_m.hour
+                            hasta_min = hasta_hora_m.minute / 60
+                            desde_min = desde_hora_m.minute / 60
+                            hasta_decimal = hasta + hasta_min
+                            desde_decimal = desde + desde_min
+                            diferencia_horas = hasta_decimal - desde_decimal
+                            diferencia_horas = round(float(diferencia_horas), 2)
+                else:
+                    if ((desde_hora_t is not None) & (hasta_hora_t is not None)):
+                        pass
+                    else:
+                        return render(request, 'personal_leave_with_pay.html',
+                                      {"form": Personal_leave_with_payForm, "error": "Rango de horas no definido"})
+                if ((desde_hora_t is not None) & (hasta_hora_t is not None)):
+                    resultado_t = horas_laborales_validas_tarde(desde_hora_t, hasta_hora_t)
+                    if resultado_t[1] == True:
+                        return render(request, 'personal_leave_with_pay.html', {"form": Personal_leave_with_payForm,
+                                                                                  "error": "Horas introducidas en el orden incorrecto"})
+                    else:
+                        if resultado_t[0] == False:
+                            return render(request, 'personal_leave_with_pay.html',
+                                          {"form": Personal_leave_with_payForm,
+                                           "error": "Fuera del horario de la tarde"})
+                        else:
+                            hasta = hasta_hora_t.hour
+                            desde = desde_hora_t.hour
+                            hasta_min = hasta_hora_t.minute / 60
+                            desde_min = desde_hora_t.minute / 60
+                            hasta_decimal = hasta + hasta_min
+                            desde_decimal = desde + desde_min
+                            diferencia_horas_t = hasta_decimal - desde_decimal
+                            diferencia_horas=diferencia_horas_t+diferencia_horas
+                            diferencia_horas= round(float(diferencia_horas), 2)
+
+                if diferencia_horas<0.50:
+                    return render(request, 'personal_leave_with_pay.html', {"form": Personal_leave_with_payForm,
+                                                                            "error": "No se puede solicitar un permiso menor a 30 minutos"})
+                horas_solicitadas = diferencia_horas + horas_usadas
+                if horas_solicitadas>2.0:
+                    #Solicitamos al HTML que exija fecha y horarios de compensación
+                    pass
+                else:
+                    new_personal_leave_with_pay=form.save(commit=False)
+                    new_personal_leave_with_pay.user=request.user
+                    new_personal_leave_with_pay.save()
+                    data_usuario.horas_con_goce_de_haberes=horas_solicitadas
+                    data_usuario.save()
+
+                return redirect('tasks')
+        except ValueError:
+            return render(request, 'personal_leave_with_pay.html', {"form": Personal_leave_with_payForm, "error": "Error"})
+
+@login_required
+def vacation_account_request(request):
+    id_user = request.user.id
+    data_vacation = Data_user.objects.get(user_id=id_user)
+    dias_de_vacacion = data_vacation.dias_de_vacacion
+    if request.method == "GET":
+        if dias_de_vacacion<=0:
+            return redirect('no_tiene_vacacion')
+        else:
+            return render(request, 'vacation_account_request.html', {"form": Vacation_account_requestForm,'dias_de_vacacion': dias_de_vacacion,})
+    else:
+        try:
+            form = Vacation_account_requestForm(request.POST)
+            if form.is_valid():
+                fecha = form.cleaned_data['fecha_de_solicitud']
+                desde_fecha_a = form.cleaned_data['fecha_solicitada1']
+                hasta_fecha_a = form.cleaned_data['fecha_solicitada1_hasta']
+                desde_fecha_b = form.cleaned_data['fecha_solicitada2']
+                hasta_fecha_b = form.cleaned_data['fecha_solicitada2_hasta']
+                desde_fecha_c = form.cleaned_data['fecha_solicitada3']
+                hasta_fecha_c = form.cleaned_data['fecha_solicitada3_hasta']
+                dias_solicitados = form.cleaned_data['dias_habiles_programados']
+                if dias_solicitados>dias_de_vacacion:
+                    return render(request, 'vacation_account_request.html',
+                                  {"form": Vacation_account_requestForm, "error": "No puede solicitar mas dias de vacación de los que tiene disponibles",
+                                   'dias_de_vacacion': dias_de_vacacion, })
+                if((desde_fecha_c is None)&(desde_fecha_b is None)&(desde_fecha_a is None)&(hasta_fecha_c is None)&(hasta_fecha_b is None)&(hasta_fecha_a is None)):
+                    return render(request, 'vacation_account_request.html',
+                                  {"form": Vacation_account_requestForm, "error": "No se introdujo ninguna fecha",'dias_de_vacacion': dias_de_vacacion,})
+                if(desde_fecha_a is not None):
+                    if(hasta_fecha_a is None):
+                        return render(request, 'vacation_account_request.html',
+                                  {"form": Vacation_account_requestForm, "error": "Fecha faltante",'dias_de_vacacion': dias_de_vacacion,})
+                if((desde_fecha_b is not None)):
+                    if (hasta_fecha_b is None):
+                        return render(request, 'vacation_account_request.html',
+                                  {"form": Vacation_account_requestForm, "error": "Fecha faltante",'dias_de_vacacion': dias_de_vacacion,})
+                if((desde_fecha_c is not None)):
+                    if (hasta_fecha_c is None):
+                        return render(request, 'vacation_account_request.html',
+                                  {"form": Vacation_account_requestForm, "error": "Fecha faltante",'dias_de_vacacion': dias_de_vacacion,})
                 new_task = form.save(commit=False)
                 new_task.user = request.user
                 new_task.save()
                 return redirect('tasks')
         except ValueError:
-            return render(request, 'personal_leave_with_pay.html', {"form": Personal_leave_with_payForm, "error": "Error creating task."+ new_task+"Hola"})
+            return render(request, 'vacation_account_request.html', {"form": Vacation_account_requestForm, "error": "Error",'dias_de_vacacion': dias_de_vacacion,})
 
-@login_required
-def vacation_account_request(request):
-    if request.method == "GET":
-        return render(request, 'vacation_account_request.html', {"form": Vacation_account_requestForm})
-    else:
-        try:
-            form = Vacation_account_requestForm(request.POST)
-            new_task = form.save(commit=False)
-            new_task.user = request.user
-            new_task.save()
-            return redirect('tasks')
-        except ValueError:
-            return render(request, 'vacation_account_request.html', {"form": Vacation_account_requestForm, "error": "Error creating task."+ new_task+"Hola"})
+# @permission_required
+def no_tiene_vacacion(request):
+    return render(request, 'no_tiene_vacacion.html')
 
 def home(request):
     return render(request, 'home.html')
-
 
 @login_required
 def signout(request):
     logout(request)
     return redirect('home')
-
 
 def signin(request):
     if request.method == 'GET':
@@ -444,6 +570,13 @@ def task_detail(request, task_id):
             return redirect('tasks')
         except ValueError:
             return render(request, 'task_detail.html', {'task': task, 'form': form, 'error': 'Error updating task.'})
+
+@login_required
+def approve_detail_offitial_permit_for_hours(request, user_id):
+    if request.method == 'GET':
+        task = get_object_or_404(Official_permit_for_hours, pk=user_id)
+        form = Official_permit_for_hoursForm(instance=task)
+        return render(request, 'prueba_exitosa.html', {'task': task, 'form': form})
 
 @login_required
 def complete_task(request, task_id):

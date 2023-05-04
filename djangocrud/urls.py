@@ -37,4 +37,6 @@ urlpatterns = [
     path('vacation_account_request/', views.vacation_account_request, name='vacation_account_request'),
     path('signup_RRHH/', views.signupRRHH, name='signup_RRHH'),
     path('approve/',views.approve,name='approve'),
+    path('vacation_account_request/no_tiene_vacacion/', views.no_tiene_vacacion,name='no_tiene_vacacion'),
+    path('approve_offitial_permit_for_hours/<int:user_id>', views.approve_detail_offitial_permit_for_hours, name='approve_detail_offitial_permit_for_hours'),
 ]
